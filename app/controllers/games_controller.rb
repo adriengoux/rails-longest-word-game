@@ -17,12 +17,27 @@ class GamesController < ApplicationController
     answer = params[:answer]
     grid = params[:grid]
 
-    english?(answer)
-    in_grid?(answer, grid)
+    result_hash = run_game(answer, grid)
+    @message = result_hash[:message]
+    @score = result_hash[:score]
+  end
 
-
-
-    @score = score_calculation(answer, grid)
+  def run_game(answer, grid)
+    result = {}
+    if in_grid?(answer, grid) == false
+      result[:win] = false
+      result[:score] = 0
+      result[:message] = "the given word <strong>#{answer}</strong> is not in the grid #{grid}"
+    elsif english?(answer) == false
+      result[:win] = false
+      result[:score] = 0
+      result[:message] = 'the given word is not an english one'
+    else
+      result[:win] = true
+      result[:score] = score_calculation(answer, grid)
+      result[:message] = 'well done'
+    end
+    return result
   end
 
   def english?(word)
@@ -40,44 +55,11 @@ class GamesController < ApplicationController
     end
   end
 
-  # def score_calculation(attempt, grid, duration)
-  #   return attempt.length * duration
-  # end
   def score_calculation(try, grid)
     @my_score = (try.length.fdiv(grid.length)) * 10
     @my_score.to_i
   end
 end
-
-# previous game done
-
-
-
-
-# def run_game(attempt, grid, start_time, end_time)
-#   # TODO: runs the game and return detailed hash of result (with `:score`, `:message` and `:time` keys)
-#   result = {}
-#   my_duration = duration(start_time, end_time)
-#   if in_grid?(attempt, grid) == false
-#     result[:time] = my_duration
-#     result[:score] = 0
-#     result[:message] ="the given word is not in the grid"
-#   elsif english?(attempt) == false
-#     result[:time] = my_duration
-#     result[:score] = 0
-#     result[:message] = "the given word is not an english one"
-#   else
-#     result[:time] = my_duration
-#     result[:score] = score_calculation(attempt, grid, my_duration)
-#     result[:message] = "well done"
-#     # {
-#     #   bad: "poor score" ,
-#     #   medium: "not bad",
-#     #   good: "good job"
-#     # }
-#   end
-#   result
-# end
 
 
 

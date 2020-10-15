@@ -1,8 +1,7 @@
 <h2>Result</h2>
 
-
-<p><%= @result %>  </p>
-<p><%= @score %></p>
+<p> <%= raw @message %> </p>
+<p>Your score is: <strong><%=h @score %></strong></p>
 
 
 <p><%= link_to "Play again", new_path %></p>
